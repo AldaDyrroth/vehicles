@@ -2,11 +2,9 @@
 from src.api.api_client import VehicleApiClient
 import os
 import sys
-from src.sql.queries.orm import SyncORM, AsyncORM
+from src.sql.queries.orm import AsyncORM
 from faker import Faker
 import time
-
-from tests.conftest import rndm_vehicle_id
 
 fake = Faker()
 

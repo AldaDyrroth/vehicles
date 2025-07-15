@@ -1,5 +1,3 @@
-import random
-
 from pydantic import BaseModel
 from typing import Optional
 from typing import List
@@ -48,7 +46,7 @@ class Generators:
     def generate_vehicle_data(num_cars=1):
         cars = []
         for _ in range(num_cars):
-            vehicle = VehicleData(
+            vehicle = BaseVehicle(
                 vin=fake.vin(),
                 model=fake.random_element(elements=("Model S", "Civic", "F-150", "Camry", "Silverado")),
                 manufacturer=fake.random_element(elements=("Toyota", "Volkswagen", "Mercedes-Benz", "Ford", "Honda", "Chevrolet", "Nissan", "BMW", "Hyundai", "Kia", "Audi", "Volvo", "Subaru", "Mazda", "Lexus")),
@@ -70,33 +68,22 @@ class Generators:
         return vehicle
 
 
+class BaseVehicle(BaseModel):
+    vin: str
+    model: str
+    manufacturer: str
+    year: int
+    odometer: int
+    odometerUnit: str
 
-class VehicleStock(BaseModel):
+
+class VehicleStock(BaseVehicle):
     id: int
     createdAt: datetime
-    vin: str
-    model: str
-    manufacturer: str
-    year: int
-    odometer: int
-    odometerUnit: str
 
-class VehicleData(BaseModel):
-    vin: str
-    model: str
-    manufacturer: str
-    year: int
-    odometer: int
-    odometerUnit: str
 
-class VehicleAds(BaseModel):
+class VehicleAds(BaseVehicle):
     _id: str
-    vin: str
-    model: str
-    manufacturer: str
-    year: int
-    odometer: int
-    odometerUnit: str
     price: float
     priceUnit: str
     publishedAt: datetime

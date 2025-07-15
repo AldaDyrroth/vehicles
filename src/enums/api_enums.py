@@ -1,6 +1,6 @@
 from enum import Enum
 
-class Par(Enum):
+class Endpoint(Enum):
     BASE_IP = "localhost"
     STOCK_PORT = "3002"
     ADS_PORT = "3003"

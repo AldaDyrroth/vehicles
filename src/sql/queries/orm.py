@@ -1,5 +1,6 @@
 from sqlalchemy import text, insert, delete, select, update
-from src.sql.database import sync_engine, async_engine, async_session_factory, sync_session_factory
+
+from src.sql.database import Engines
 from src.data_models.models import metadata_obj, WorkersOrm, vehicles_table, Generators
 
 
@@ -7,7 +8,7 @@ class SyncORM:
 
     @staticmethod
     def select_vehicles():
-        with sync_session_factory() as session:
+        with Engines.sync_session_factory() as session:
             #select = session.get(WorkersOrm, vehicle_id)
             query = select(WorkersOrm)# .filter_by()
             result = session.execute(query)
@@ -16,7 +17,7 @@ class SyncORM:
 
     @staticmethod
     def insert_vehicles(count):
-        with sync_session_factory() as session:
+        with Engines.sync_session_factory() as session:
             data = Generators.generate_vehicle_data(count)
             total = []
             for i in range(count):
@@ -34,14 +35,14 @@ class SyncORM:
 
     @staticmethod
     def update_vehicle(id: int, new_odometer: int = 0):
-        with sync_session_factory() as session:
+        with Engines.sync_session_factory() as session:
             vehicle = session.get(WorkersOrm, id)
             vehicle.odometer = new_odometer
             session.commit()
 
     @staticmethod
     def delete_vehicles(vehicle_id):
-        with sync_session_factory() as session:
+        with Engines.sync_session_factory() as session:
             session.query(WorkersOrm).filter_by(id=vehicle_id).delete()
             session.commit()
 
@@ -51,7 +52,7 @@ class AsyncORM:
 
     @staticmethod
     async def select_vehicles(**wheres):
-        async with async_session_factory() as session:
+        async with Engines.async_session_factory() as session:
             # select = session.get(WorkersOrm, vehicle_id)
             query = select(WorkersOrm)  # .filter_by()
             result = await session.execute(query)
@@ -68,7 +69,7 @@ class AsyncORM:
 
     @staticmethod
     async def insert_vehicles(count):
-        async with async_session_factory() as session:
+        async with Engines.async_session_factory() as session:
             data = Generators.generate_vehicle_data(count)
             total = []
             for i in range(count):
@@ -86,7 +87,7 @@ class AsyncORM:
 
     @staticmethod
     async def update_vehicle(id: int, **params):
-        async with async_session_factory() as session:
+        async with Engines.async_session_factory() as session:
             await session.execute(
                 update(WorkersOrm)
                 .values(params)
@@ -99,7 +100,7 @@ class AsyncORM:
 
     @staticmethod
     async def delete_vehicles(vehicle_id):
-        async with async_session_factory() as session:
+        async with Engines.async_session_factory() as session:
             await session.execute(
                 delete(WorkersOrm)
                 .filter_by(id=vehicle_id)

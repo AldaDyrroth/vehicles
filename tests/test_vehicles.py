@@ -1,12 +1,26 @@
+import pytest
+import random
+
 from src.scenarios.test_scenarios import TestScenarios
 from src.api.api_client import VehicleApiClient
 from src.data_models.models import Generators
-import pytest
+
+from src.enums.api_enums import Endpoint
+
 
 @pytest.fixture
 def vehicle_client(auth_session):
     client = VehicleApiClient(auth_session)
     return TestScenarios(client)
+
+@pytest.fixture()
+def rndm_vehicle_id(auth_session):
+    response = auth_session.get(f"{Endpoint.BASE_URL.value}/stock")
+    assert response.status_code == 200, "Ошибка авторизации, статус код не 200"
+
+    get_booking = response.json()
+    id = random.choice(get_booking)["id"]
+    return id
 
 class TestVehicles():
 
